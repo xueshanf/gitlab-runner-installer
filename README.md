@@ -3,5 +3,6 @@
 This scripts automates Gitlab runner setup for Mac. It downloads, registers itself to a GitLab server, installs and starts
 the runner service. 
 
-This runner is a shell excecutor. __.gitlab-ci.yml__ example is a docker image build example.
+This runner is a shell excecutor. __.gitlab-ci.yml__ example is a docker image build job [example](https://github.com/xueshanf/docker-nodeapp.git).
+
 Docker For Mac needs to be installed in order to build docker images.
