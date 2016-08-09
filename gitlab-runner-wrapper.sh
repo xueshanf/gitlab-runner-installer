@@ -65,7 +65,7 @@ function uninstall(){
   then
       gitlab-ci-multi-runner uninstall
   else
-      echo "Runner plist file doesn't exist. Nothing to uninstall"
+      echo "Runner plist file doesn't exist. Nothing to uninstall."
   fi
 }
 
@@ -92,7 +92,7 @@ case $cmd in
     $cmd 
     ;;
   *)
-    echo "Unknow command $cmd."
+    echo "Unknown command $cmd."
     echo "./$0 stop|start|status|install|uninstall|register|update"
     exit 1
     ;;
