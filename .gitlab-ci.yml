@@ -1,0 +1,46 @@
+before_script:
+  - docker info
+
+stages:
+  - build
+  - test
+  - cleanup_test
+  - deploy
+
+build_image:
+  stage: build
+  tags:
+    - shell
+  script:
+    - docker build -t xueshanf/nodeapp:latest .
+    - docker push xueshanf/nodeapp:latest
+
+test_image:
+  stage: test
+  tags:
+    - shell
+  script:
+    - docker pull xueshanf/nodeapp:latest
+    - docker ps -a | grep nodeapp-test && docker rm -f nodeapp-test && sleep 5
+    - docker run -d -p 8000:8000 --name nodeapp-test xueshanf/nodeapp:latest
+    - sleep 5
+    - curl -s localhost:8000
+    
+cleanup_test_job:
+  stage: cleanup_test
+  tags:
+    - shell
+  script:
+    - docker kill nodeapp-test
+    - docker rm -f nodeapp-test
+  allow_failure: true
+  when: always
+    
+deploy_nodeapp:
+  stage: deploy
+  tags:
+    - shell
+  script:
+    - docker ps | grep nodeapp-test || docker kill nodeapp-test && docker rm -f nodeapp-test
+    - docker run -d -p 80:8000 --name nodeapp-test xueshanf/nodeapp:latest
+    - open http://localhost:80
