@@ -6,7 +6,7 @@
 # https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/osx.md
 #
 # Requirements
-# Docker for Mac: https://docs.docker.com/engine/installation/mac/
+# If you need to build docker, install Docker for Mac: https://docs.docker.com/engine/installation/mac/
 # Gitlab repoistory runner token, put it in ~user/.gitlab-runner/ci-token 
 # Gitlab server name, put it in ~user/.gitlab-runner/ci-server: e.g. https://example-ci.com/ci
 
