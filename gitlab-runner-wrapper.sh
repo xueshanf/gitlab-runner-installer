@@ -3,7 +3,7 @@
 # Install, register, start GitLab Runner on Mac
 #
 # Reference: http://docs.gitlab.com/ce/ci/docker/using_docker_build.html
-# https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/osx.md
+# https://gitlab.com/gitlab-org/gitlab-runner/blob/master/docs/install/osx.md
 #
 # Requirements
 # If you need to build docker, install Docker for Mac: https://docs.docker.com/engine/installation/mac/
@@ -13,12 +13,12 @@
 runnerPlist="$HOME/gitlab-runner.plist"
 runnerToken="$HOME/.gitlab-runner/ci-token"
 gitlabCI="$HOME/.gitlab-runner/ci-server"
+runnerUrl=https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
 
 # Download binary
 function download(){
-  runnerUrl=https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-ci-multi-runner-darwin-amd64
-  sudo curl --output /usr/local/bin/gitlab-ci-multi-runner $runnerUrl
-  sudo chmod +x /usr/local/bin/gitlab-ci-multi-runner
+  sudo curl --output /usr/local/bin/gitlab-runner $runnerUrl
+  sudo chmod +x /usr/local/bin/gitlab-runner
 }
 
 # Update
@@ -32,13 +32,13 @@ function update(){
 
 # Run the following as regular user 
 function register(){
-  gitlab-ci-multi-runner register -n \
+  gitlab-runner register -n \
     --url $gitlabCI \
     --registration-token $runnerToken \
     --executor shell \
     --tag-list shell \
     --description "Runner On Mymac"
-  gitlab-ci-multi-runner start
+  gitlab-runner start
 }
 
 # Install
@@ -49,27 +49,28 @@ function install(){
    echo "Runner is instaled already - $runnerPlist already exist."
    exit 0
   else
-    gitlab-ci-multi-runner install
+    download
+    gitlab-runner install
   fi
 }
 
 # Start, stop, status
 function start_stop_status(){
-  gitlab-ci-multi-runner $cmd
+  gitlab-runner -l debug $cmd
 }
 
 # Uninstall
 function uninstall(){
-  gitlab-ci-multi-runner stop 
+  gitlab-runner stop 
   if [ -f "runnerPliust" ];
   then
-      gitlab-ci-multi-runner uninstall
+      gitlab-runner uninstall
   else
       echo "Runner plist file doesn't exist. Nothing to uninstall."
   fi
 }
 
-if [ ! -x "/usr/local/bin/gitlab-ci-multi-runner" ]; then
+if [ ! -x "/usr/local/bin/gitlab-runner" ]; then
   download
 fi
 
@@ -92,8 +93,6 @@ case $cmd in
     $cmd 
     ;;
   *)
-    echo "Unknown command $cmd."
-    echo "./$0 stop|start|status|install|uninstall|register|update"
-    exit 1
+    gitlab-runner $cmd
     ;;
 esac
